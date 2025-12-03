@@ -4,22 +4,14 @@ import {
 	Alert,
 	Button,
 	Input,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalFooter,
-	ModalHeader,
 	Textarea,
-	useDisclosure,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCounter } from "@uidotdev/usehooks";
-import { useCallback, useRef } from "react";
-import { useForm } from "react-hook-form";
-import Webcam from "react-webcam";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { AccordionTitle } from "../../components/AccordionTitle";
 import { MapComponent } from "../../components/MapComponent";
@@ -43,24 +35,12 @@ const formSchema = z.object({
 });
 
 function RouteComponent() {
-	const modalControl = useDisclosure();
-
-	const webcamRef = useRef<Webcam>(null);
-
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			images: [],
 		},
 	});
-
-	const capture = useCallback(() => {
-		const imageSrc = webcamRef.current?.getScreenshot(); // base64 image
-		if (imageSrc) {
-			form.setValue("images", [imageSrc], { shouldValidate: true });
-			modalControl.onClose();
-		}
-	}, [webcamRef]);
 
 	const [count, { increment, set }] = useCounter(1, {
 		min: 1,
@@ -189,36 +169,6 @@ function RouteComponent() {
 									label="Seleccionar Imagenes"
 									accept="image/*"
 								/>
-
-								<Modal
-									size="full"
-									isOpen={modalControl.isOpen}
-									onOpenChange={modalControl.onOpenChange}
-								>
-									<ModalContent>
-										<ModalHeader />
-										<ModalBody>
-											<Webcam
-												audio={false}
-												ref={webcamRef}
-												className="h-full object-cover"
-												screenshotFormat="image/jpeg"
-												videoConstraints={{
-													facingMode: "environment",
-												}}
-											></Webcam>
-										</ModalBody>
-										<ModalFooter>
-											<Button
-												type="button"
-												className="w-full mt-2 bg-[#971438] text-white"
-												onPress={capture}
-											>
-												Tomar Foto
-											</Button>
-										</ModalFooter>
-									</ModalContent>
-								</Modal>
 							</>
 						) : (
 							<>
@@ -247,16 +197,16 @@ function RouteComponent() {
 						/>
 					}
 				>
-					<Textarea
-						value={form.getValues("comments")}
-						placeholder="Ejemplo: El bache esta pegado a la banqueta del lado derecho."
-						onChange={(e) => {
-							form.setValue("comments", e.target.value, {
-								shouldValidate: true,
-							});
-						}}
+					<Controller
+						control={form.control}
+						name="comments"
+						render={({ field }) => (
+							<Textarea
+								{...field}
+								placeholder="Ejemplo: El bache esta pegado a la banqueta del lado derecho."
+							/>
+						)}
 					/>
-
 					<Button
 						className="w-full mt-2 bg-[#971438] text-white"
 						onPress={increment}
@@ -278,42 +228,45 @@ function RouteComponent() {
 					}
 				>
 					<div className="flex flex-col gap-2">
-						<Input
-							isInvalid={!!form.formState.errors.reporter?.name}
-							value={reporter?.name}
-							errorMessage={form.formState.errors.reporter?.name?.message}
-							placeholder="Juan Perez"
-							label="Tu Nombre"
-							onChange={(e) => {
-								form.setValue("reporter.name", e.target.value, {
-									shouldValidate: true,
-								});
-							}}
+						<Controller
+							control={form.control}
+							name="reporter.name"
+							render={({ field }) => (
+								<Input
+									{...field}
+									isInvalid={!!form.formState.errors.reporter?.name}
+									errorMessage={form.formState.errors.reporter?.name?.message}
+									placeholder="Juan Perez"
+									label="Tu Nombre"
+								/>
+							)}
 						/>
-						<Input
-							placeholder="ejemplo@gmail.com"
-							value={reporter?.email}
-							type="email"
-							isInvalid={!!form.formState.errors.reporter?.email}
-							errorMessage={form.formState.errors.reporter?.email?.message}
-							label="Correo Electronico"
-							onChange={(e) => {
-								form.setValue("reporter.email", e.target.value, {
-									shouldValidate: true,
-								});
-							}}
+						<Controller
+							control={form.control}
+							name="reporter.email"
+							render={({ field }) => (
+								<Input
+									{...field}
+									placeholder="ejemplo@gmail.com"
+									type="email"
+									isInvalid={!!form.formState.errors.reporter?.email}
+									errorMessage={form.formState.errors.reporter?.email?.message}
+									label="Correo Electronico"
+								/>
+							)}
 						/>
-						<Input
-							placeholder="55 5555 5555"
-							value={reporter?.phone}
-							isInvalid={!!form.formState.errors.reporter?.phone}
-							errorMessage={form.formState.errors.reporter?.phone?.message}
-							label="Telefono"
-							onChange={(e) => {
-								form.setValue("reporter.phone", e.target.value, {
-									shouldValidate: true,
-								});
-							}}
+						<Controller
+							control={form.control}
+							name="reporter.phone"
+							render={({ field }) => (
+								<Input
+									placeholder="55 5555 5555"
+									{...field}
+									isInvalid={!!form.formState.errors.reporter?.phone}
+									errorMessage={form.formState.errors.reporter?.phone?.message}
+									label="Telefono"
+								/>
+							)}
 						/>
 					</div>
 					<Button
