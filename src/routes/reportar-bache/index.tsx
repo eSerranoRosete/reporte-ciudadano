@@ -190,20 +190,6 @@ function RouteComponent() {
 									accept="image/*"
 								/>
 
-								<span>o</span>
-
-								<Button
-									type="button"
-									variant="flat"
-									onPress={modalControl.onOpen}
-									startContent={
-										<CameraIcon className="size-5" weight="duotone" />
-									}
-									fullWidth
-								>
-									Tomar Foto
-								</Button>
-
 								<Modal
 									size="full"
 									isOpen={modalControl.isOpen}
