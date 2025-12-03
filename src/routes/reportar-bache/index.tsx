@@ -1,5 +1,4 @@
 import { Accordion, AccordionItem, Button, Textarea } from "@heroui/react";
-import { CheckIcon } from "@phosphor-icons/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useCounter } from "@uidotdev/usehooks";
 import { AccordionTitle } from "../../components/AccordionTitle";
@@ -9,7 +8,7 @@ export const Route = createFileRoute("/reportar-bache/")({
 });
 
 function RouteComponent() {
-	const [count, { increment, decrement, set }] = useCounter(1, {
+	const [count, { increment, set }] = useCounter(1, {
 		min: 1,
 		max: 3,
 	});
