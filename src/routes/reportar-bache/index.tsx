@@ -57,7 +57,7 @@ function RouteComponent() {
 	const capture = useCallback(() => {
 		const imageSrc = webcamRef.current?.getScreenshot(); // base64 image
 		if (imageSrc) {
-			form.setValue("images", [imageSrc]);
+			form.setValue("images", [imageSrc], { shouldValidate: true });
 			modalControl.onClose();
 		}
 	}, [webcamRef]);
@@ -136,7 +136,8 @@ function RouteComponent() {
 						<MapComponent
 							pinCoords={form.getValues("location")}
 							setPinCoords={(coords) => {
-								coords && form.setValue("location", coords);
+								coords &&
+									form.setValue("location", coords, { shouldValidate: true });
 							}}
 						/>
 					</div>
@@ -181,7 +182,9 @@ function RouteComponent() {
 											}),
 										);
 
-										form.setValue("images", base64Files as string[]);
+										form.setValue("images", base64Files as string[], {
+											shouldValidate: true,
+										});
 									}}
 									label="Seleccionar Imagenes"
 									accept="image/*"
@@ -262,7 +265,9 @@ function RouteComponent() {
 						value={form.getValues("comments")}
 						placeholder="Ejemplo: El bache esta pegado a la banqueta del lado derecho."
 						onChange={(e) => {
-							form.setValue("comments", e.target.value);
+							form.setValue("comments", e.target.value, {
+								shouldValidate: true,
+							});
 						}}
 					/>
 
@@ -294,7 +299,9 @@ function RouteComponent() {
 							placeholder="Juan Perez"
 							label="Tu Nombre"
 							onChange={(e) => {
-								form.setValue("reporter.name", e.target.value);
+								form.setValue("reporter.name", e.target.value, {
+									shouldValidate: true,
+								});
 							}}
 						/>
 						<Input
@@ -305,7 +312,9 @@ function RouteComponent() {
 							errorMessage={form.formState.errors.reporter?.email?.message}
 							label="Correo Electronico"
 							onChange={(e) => {
-								form.setValue("reporter.email", e.target.value);
+								form.setValue("reporter.email", e.target.value, {
+									shouldValidate: true,
+								});
 							}}
 						/>
 						<Input
@@ -315,7 +324,9 @@ function RouteComponent() {
 							errorMessage={form.formState.errors.reporter?.phone?.message}
 							label="Telefono"
 							onChange={(e) => {
-								form.setValue("reporter.phone", e.target.value);
+								form.setValue("reporter.phone", e.target.value, {
+									shouldValidate: true,
+								});
 							}}
 						/>
 					</div>
