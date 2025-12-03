@@ -13,9 +13,9 @@ import {
 	useDisclosure,
 } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CameraIcon } from "@phosphor-icons/react";
+import { CameraIcon, CheckCircleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCounter } from "@uidotdev/usehooks";
 import { useCallback, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,11 @@ const formSchema = z.object({
 	}),
 	images: z.array(z.string()).min(1),
 	comments: z.string().min(3),
+	reporter: z.object({
+		name: z.string().min(3),
+		email: z.email(),
+		phone: z.string(),
+	}),
 });
 
 function RouteComponent() {
@@ -59,11 +64,12 @@ function RouteComponent() {
 
 	const [count, { increment, set }] = useCounter(1, {
 		min: 1,
-		max: 3,
+		max: 4,
 	});
 
 	const submit = useMutation({
 		mutationFn: async (data: z.infer<typeof formSchema>) => {
+			await new Promise((r) => setTimeout(r, 500));
 			console.log(data);
 		},
 	});
@@ -71,12 +77,39 @@ function RouteComponent() {
 	const images = form.watch("images");
 	const comments = form.watch("comments");
 	const location = form.watch("location");
+	const reporter = form.watch("reporter");
+
+	if (submit.isSuccess) {
+		return (
+			<div className="w-full h-full grow bg-background flex items-center justify-center">
+				<div className="text-center flex flex-col items-center">
+					<CheckCircleIcon
+						className="text-[#971438] size-32"
+						weight="duotone"
+					/>
+					<h1 className="text-3xl font-medium">¡Gracias!</h1>
+					<p>Tu reporte ha sido enviado.</p>
+					<Button
+						as={Link}
+						to="/"
+						className="w-full mt-10 bg-[#971438] text-white"
+						onPress={() => {
+							submit.reset();
+						}}
+					>
+						Volver al inicio
+					</Button>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex flex-col gap-2 grow">
-			<h1 className="text-2xl font-semibold text-center mb-3">
-				Reportar Bache
-			</h1>
+			<h1 className="text-2xl font-semibold text-center">Reportar Bache</h1>
+			<p className="text-default-500 text-sm text-center mb-3">
+				Completa el formulario para levantar un reporte.
+			</p>
 			<Accordion
 				as="form"
 				onSubmit={form.handleSubmit((v) => submit.mutate(v))}
@@ -226,12 +259,70 @@ function RouteComponent() {
 					}
 				>
 					<Textarea
+						value={form.getValues("comments")}
 						placeholder="Ejemplo: El bache esta pegado a la banqueta del lado derecho."
-						onBlur={(e) => {
+						onChange={(e) => {
 							form.setValue("comments", e.target.value);
 						}}
 					/>
-					<Button className="w-full mt-2 bg-[#971438] text-white">
+
+					<Button
+						className="w-full mt-2 bg-[#971438] text-white"
+						onPress={increment}
+						type="button"
+					>
+						Siguiente
+					</Button>
+				</AccordionItem>
+
+				<AccordionItem
+					key={4}
+					onPress={() => set(4)}
+					aria-label="Comentarios"
+					title={
+						<AccordionTitle
+							title="4. Agrega tus datos"
+							isCompleted={!!reporter}
+						/>
+					}
+				>
+					<div className="flex flex-col gap-2">
+						<Input
+							isInvalid={!!form.formState.errors.reporter?.name}
+							value={reporter?.name}
+							errorMessage={form.formState.errors.reporter?.name?.message}
+							placeholder="Juan Perez"
+							label="Tu Nombre"
+							onChange={(e) => {
+								form.setValue("reporter.name", e.target.value);
+							}}
+						/>
+						<Input
+							placeholder="ejemplo@gmail.com"
+							value={reporter?.email}
+							isInvalid={!!form.formState.errors.reporter?.email}
+							errorMessage={form.formState.errors.reporter?.email?.message}
+							label="Correo Electronico"
+							onChange={(e) => {
+								form.setValue("reporter.email", e.target.value);
+							}}
+						/>
+						<Input
+							placeholder="55 5555 5555"
+							value={reporter?.phone}
+							isInvalid={!!form.formState.errors.reporter?.phone}
+							errorMessage={form.formState.errors.reporter?.phone?.message}
+							label="Telefono"
+							onChange={(e) => {
+								form.setValue("reporter.phone", e.target.value);
+							}}
+						/>
+					</div>
+					<Button
+						isLoading={submit.isPending}
+						type="submit"
+						className="w-full mt-2 bg-[#971438] text-white"
+					>
 						Enviar Reporte
 					</Button>
 				</AccordionItem>
