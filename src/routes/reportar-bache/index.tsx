@@ -300,6 +300,7 @@ function RouteComponent() {
 						<Input
 							placeholder="ejemplo@gmail.com"
 							value={reporter?.email}
+							type="email"
 							isInvalid={!!form.formState.errors.reporter?.email}
 							errorMessage={form.formState.errors.reporter?.email?.message}
 							label="Correo Electronico"
