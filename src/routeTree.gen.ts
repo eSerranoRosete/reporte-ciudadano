@@ -10,103 +10,43 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SolicitarDesazolveIndexRouteImport } from './routes/solicitar-desazolve/index'
-import { Route as ReportarSocabonIndexRouteImport } from './routes/reportar-socabon/index'
-import { Route as ReportarFugaIndexRouteImport } from './routes/reportar-fuga/index'
-import { Route as ReportarEncharcamientoIndexRouteImport } from './routes/reportar-encharcamiento/index'
-import { Route as ReportarBacheIndexRouteImport } from './routes/reportar-bache/index'
+import { Route as ReporteIdRouteImport } from './routes/reporte.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SolicitarDesazolveIndexRoute = SolicitarDesazolveIndexRouteImport.update({
-  id: '/solicitar-desazolve/',
-  path: '/solicitar-desazolve/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportarSocabonIndexRoute = ReportarSocabonIndexRouteImport.update({
-  id: '/reportar-socabon/',
-  path: '/reportar-socabon/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportarFugaIndexRoute = ReportarFugaIndexRouteImport.update({
-  id: '/reportar-fuga/',
-  path: '/reportar-fuga/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportarEncharcamientoIndexRoute =
-  ReportarEncharcamientoIndexRouteImport.update({
-    id: '/reportar-encharcamiento/',
-    path: '/reportar-encharcamiento/',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ReportarBacheIndexRoute = ReportarBacheIndexRouteImport.update({
-  id: '/reportar-bache/',
-  path: '/reportar-bache/',
+const ReporteIdRoute = ReporteIdRouteImport.update({
+  id: '/reporte/$id',
+  path: '/reporte/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/reportar-bache': typeof ReportarBacheIndexRoute
-  '/reportar-encharcamiento': typeof ReportarEncharcamientoIndexRoute
-  '/reportar-fuga': typeof ReportarFugaIndexRoute
-  '/reportar-socabon': typeof ReportarSocabonIndexRoute
-  '/solicitar-desazolve': typeof SolicitarDesazolveIndexRoute
+  '/reporte/$id': typeof ReporteIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/reportar-bache': typeof ReportarBacheIndexRoute
-  '/reportar-encharcamiento': typeof ReportarEncharcamientoIndexRoute
-  '/reportar-fuga': typeof ReportarFugaIndexRoute
-  '/reportar-socabon': typeof ReportarSocabonIndexRoute
-  '/solicitar-desazolve': typeof SolicitarDesazolveIndexRoute
+  '/reporte/$id': typeof ReporteIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/reportar-bache/': typeof ReportarBacheIndexRoute
-  '/reportar-encharcamiento/': typeof ReportarEncharcamientoIndexRoute
-  '/reportar-fuga/': typeof ReportarFugaIndexRoute
-  '/reportar-socabon/': typeof ReportarSocabonIndexRoute
-  '/solicitar-desazolve/': typeof SolicitarDesazolveIndexRoute
+  '/reporte/$id': typeof ReporteIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/reportar-bache'
-    | '/reportar-encharcamiento'
-    | '/reportar-fuga'
-    | '/reportar-socabon'
-    | '/solicitar-desazolve'
+  fullPaths: '/' | '/reporte/$id'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/reportar-bache'
-    | '/reportar-encharcamiento'
-    | '/reportar-fuga'
-    | '/reportar-socabon'
-    | '/solicitar-desazolve'
-  id:
-    | '__root__'
-    | '/'
-    | '/reportar-bache/'
-    | '/reportar-encharcamiento/'
-    | '/reportar-fuga/'
-    | '/reportar-socabon/'
-    | '/solicitar-desazolve/'
+  to: '/' | '/reporte/$id'
+  id: '__root__' | '/' | '/reporte/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ReportarBacheIndexRoute: typeof ReportarBacheIndexRoute
-  ReportarEncharcamientoIndexRoute: typeof ReportarEncharcamientoIndexRoute
-  ReportarFugaIndexRoute: typeof ReportarFugaIndexRoute
-  ReportarSocabonIndexRoute: typeof ReportarSocabonIndexRoute
-  SolicitarDesazolveIndexRoute: typeof SolicitarDesazolveIndexRoute
+  ReporteIdRoute: typeof ReporteIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -118,39 +58,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/solicitar-desazolve/': {
-      id: '/solicitar-desazolve/'
-      path: '/solicitar-desazolve'
-      fullPath: '/solicitar-desazolve'
-      preLoaderRoute: typeof SolicitarDesazolveIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reportar-socabon/': {
-      id: '/reportar-socabon/'
-      path: '/reportar-socabon'
-      fullPath: '/reportar-socabon'
-      preLoaderRoute: typeof ReportarSocabonIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reportar-fuga/': {
-      id: '/reportar-fuga/'
-      path: '/reportar-fuga'
-      fullPath: '/reportar-fuga'
-      preLoaderRoute: typeof ReportarFugaIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reportar-encharcamiento/': {
-      id: '/reportar-encharcamiento/'
-      path: '/reportar-encharcamiento'
-      fullPath: '/reportar-encharcamiento'
-      preLoaderRoute: typeof ReportarEncharcamientoIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reportar-bache/': {
-      id: '/reportar-bache/'
-      path: '/reportar-bache'
-      fullPath: '/reportar-bache'
-      preLoaderRoute: typeof ReportarBacheIndexRouteImport
+    '/reporte/$id': {
+      id: '/reporte/$id'
+      path: '/reporte/$id'
+      fullPath: '/reporte/$id'
+      preLoaderRoute: typeof ReporteIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -158,11 +70,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ReportarBacheIndexRoute: ReportarBacheIndexRoute,
-  ReportarEncharcamientoIndexRoute: ReportarEncharcamientoIndexRoute,
-  ReportarFugaIndexRoute: ReportarFugaIndexRoute,
-  ReportarSocabonIndexRoute: ReportarSocabonIndexRoute,
-  SolicitarDesazolveIndexRoute: SolicitarDesazolveIndexRoute,
+  ReporteIdRoute: ReporteIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

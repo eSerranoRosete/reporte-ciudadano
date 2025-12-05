@@ -6,7 +6,16 @@ interface IFProps {
   children: ReactNode;
 }
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false, // optional
+      retry: false, // optional, but many people set this too
+    },
+  },
+});
 
 export const Providers = ({ children }: IFProps) => {
   return (
