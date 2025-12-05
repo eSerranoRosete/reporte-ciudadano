@@ -4,26 +4,26 @@ import { ReporteForm } from "../components/ReporteForm";
 import { useTipoReporte } from "../hooks/useTipoReporte";
 
 export const Route = createFileRoute("/reporte/$id")({
-  component: RouteComponent,
+	component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { id } = Route.useParams();
+	const { id } = Route.useParams();
 
-  const tiposReporte = useTipoReporte();
+	const tiposReporte = useTipoReporte();
 
-  const reporteData = useMemo(() => {
-    const found = tiposReporte.data?.find((item: any) => item.id_Objeto === id);
-    if (!found) throw new Error("data not found");
+	const reporteData = useMemo(() => {
+		const found = tiposReporte.data?.find((item: any) => item.id_Objeto === id);
+		if (!found) throw new Error("data not found");
 
-    return found;
-  }, [tiposReporte.data, id]);
+		return found;
+	}, [tiposReporte.data, id]);
 
-  console.log(reporteData);
+	console.log(reporteData);
 
-  return (
-    <div>
-      <ReporteForm title={`Reportar ${reporteData.nombre}`} />
-    </div>
-  );
+	return (
+		<div>
+			<ReporteForm reporteId={id} title={`Reportar ${reporteData.nombre}`} />
+		</div>
+	);
 }
