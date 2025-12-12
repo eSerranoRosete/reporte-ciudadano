@@ -13,13 +13,16 @@ function RouteComponent() {
 	const tiposReporte = useTipoReporte();
 
 	const reporteData = useMemo(() => {
-		const found = tiposReporte.data?.find((item: any) => item.id_Objeto === id);
-		if (!found) throw new Error("data not found");
+		const found = tiposReporte.data?.find(
+			(item: any) => item.id_Tipo_Reporte_Ciudadano_Agua === id,
+		);
+
+		if (!found) return;
 
 		return found;
 	}, [tiposReporte.data, id]);
 
-	console.log(reporteData);
+	if (tiposReporte.isLoading) return "Loading...";
 
 	return (
 		<div>

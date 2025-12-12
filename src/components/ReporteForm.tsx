@@ -13,8 +13,8 @@ import { useMutation } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useCounter } from "@uidotdev/usehooks";
 import { Controller, useForm } from "react-hook-form";
+import { v4 as uuid } from "uuid";
 import { z } from "zod";
-import { useCredentials } from "../hooks/useCredentials";
 import { apiRequest } from "../lib/api";
 import { AccordionTitle } from "./AccordionTitle";
 import { MapComponent } from "./MapComponent";
@@ -39,8 +39,6 @@ interface ReporteFormProps {
 }
 
 export function ReporteForm({ title, reporteId }: ReporteFormProps) {
-	const credentials = useCredentials();
-
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -55,25 +53,22 @@ export function ReporteForm({ title, reporteId }: ReporteFormProps) {
 
 	const submit = useMutation({
 		mutationFn: async (data: z.infer<typeof formSchema>) => {
-			const res = await apiRequest(
-				"/App_Agua/Reporte_Ciudadano_Alta",
-				{
-					apI_Key: credentials.apI_Key,
-					telefono_Denunciante: data.reporter.phone,
-					id_Reporte_Ciudadano: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-					id_Tipo_Reporte_Ciudadano_Agua: reporteId,
-					comentarios: data.comments,
-					ubicacion: "Sin Datos",
-					latitud: data.location.lat,
-					longitud: data.location.lng,
-					precision: 0,
-					nombre_Denunciante: data.reporter.name,
-					correo_Denunciante: data.reporter.email,
-					imagen: data.images[0],
-				},
-				credentials.token,
-				"client",
-			);
+			console.log(normalizeToJPEG(data.images[0]));
+
+			const res = await apiRequest("/App_Agua/Reporte_Ciudadano_Alta", {
+				apI_Key: "4682CA29-8F9F-4C44-82CC-D92FA5EB2BB2",
+				telefono_Denunciante: data.reporter.phone,
+				id_Reporte_Ciudadano_Agua: uuid(),
+				id_Tipo_Reporte_Ciudadano_Agua: reporteId,
+				comentarios: data.comments,
+				ubicacion: "sin datos",
+				latitud: data.location.lat,
+				longitud: data.location.lng,
+				precision: 0,
+				nombre_Denunciante: data.reporter.name,
+				correo_Denunciante: data.reporter.email,
+				imagen: JSON.stringify(normalizeToJPEG(data.images[0])),
+			});
 			if (!res.ok) {
 				throw new Error("Fallo en alta de reporte");
 			}
@@ -317,4 +312,9 @@ export function ReporteForm({ title, reporteId }: ReporteFormProps) {
 			</Accordion>
 		</div>
 	);
+}
+
+function normalizeToJPEG(dataUrl: string) {
+	const base64 = dataUrl.split(",")[1]; // strip prefix
+	return `data:image/jpeg;base64,${base64}`;
 }

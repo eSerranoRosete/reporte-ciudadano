@@ -1,20 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "../lib/api";
-import { useCredentials } from "./useCredentials";
 
 export function useTipoReporte() {
-  const credentials = useCredentials();
   return useQuery({
     queryKey: ["tipo-reporte"],
     queryFn: async () => {
       const res = await apiRequest(
-        "/Agua/Tipo_Reporte_Ciudadano_Agua_Devuelve",
+        "/App_Agua/Tipo_Reporte_Ciudadano_Devuelve",
         {
-          apI_Key: credentials.apI_Key,
-          idUser: credentials.idUser,
-          sessionId: credentials.sessionId,
+          apI_Key: "4682CA29-8F9F-4C44-82CC-D92FA5EB2BB2",
         },
-        credentials.token,
       );
 
       if (!res.ok) throw new Error("Fetch Failed");
