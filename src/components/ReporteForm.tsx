@@ -15,6 +15,7 @@ import { useCounter } from "@uidotdev/usehooks";
 import { Controller, useForm } from "react-hook-form";
 import { v4 as uuid } from "uuid";
 import { z } from "zod";
+import { useReverseGeocode } from "../hooks/useReverseGeocode";
 import { apiRequest } from "../lib/api";
 import { AccordionTitle } from "./AccordionTitle";
 import { MapComponent } from "./MapComponent";
@@ -39,6 +40,8 @@ interface ReporteFormProps {
 }
 
 export function ReporteForm({ title, reporteId }: ReporteFormProps) {
+	const toAddress = useReverseGeocode();
+
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -53,7 +56,10 @@ export function ReporteForm({ title, reporteId }: ReporteFormProps) {
 
 	const submit = useMutation({
 		mutationFn: async (data: z.infer<typeof formSchema>) => {
-			console.log(normalizeToJPEG(data.images[0]));
+			const ubicacion = await toAddress?.({
+				lat: data.location.lat,
+				lng: data.location.lng,
+			});
 
 			const res = await apiRequest("/App_Agua/Reporte_Ciudadano_Alta", {
 				apI_Key: "4682CA29-8F9F-4C44-82CC-D92FA5EB2BB2",
@@ -61,14 +67,15 @@ export function ReporteForm({ title, reporteId }: ReporteFormProps) {
 				id_Reporte_Ciudadano_Agua: uuid(),
 				id_Tipo_Reporte_Ciudadano_Agua: reporteId,
 				comentarios: data.comments,
-				ubicacion: "sin datos",
+				ubicacion,
 				latitud: data.location.lat,
 				longitud: data.location.lng,
 				precision: 0,
 				nombre_Denunciante: data.reporter.name,
 				correo_Denunciante: data.reporter.email,
-				imagen: JSON.stringify(normalizeToJPEG(data.images[0])),
+				imagen: normalizeToJPEG(data.images[0]),
 			});
+
 			if (!res.ok) {
 				throw new Error("Fallo en alta de reporte");
 			}
@@ -315,6 +322,5 @@ export function ReporteForm({ title, reporteId }: ReporteFormProps) {
 }
 
 function normalizeToJPEG(dataUrl: string) {
-	const base64 = dataUrl.split(",")[1]; // strip prefix
-	return `data:image/jpeg;base64,${base64}`;
+	return dataUrl.split(",").pop();
 }
