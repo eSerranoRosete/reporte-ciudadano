@@ -1,30 +1,7 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
-import { apiRequest } from "../lib/api";
-import { queryClient } from "../providers";
 
 export const Route = createRootRoute({
 	component: RootComponent,
-	beforeLoad: async () => {
-		await queryClient.fetchQuery({
-			queryKey: ["auth"],
-			queryFn: async () => {
-				const res = await apiRequest(
-					"/Auth/logon",
-					{
-						RFC: "Ecatepec",
-						usuario: "Eduardo.serrano",
-						password: "demo1234",
-					},
-					undefined,
-					"auth",
-				);
-
-				if (!res.ok) throw new Error("Auth Failed");
-
-				return await res.json();
-			},
-		});
-	},
 });
 
 function RootComponent() {

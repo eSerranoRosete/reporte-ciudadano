@@ -1,5 +1,6 @@
 import { HeroUIProvider, ToastProvider } from "@heroui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { APIProvider } from "@vis.gl/react-google-maps";
 import type { ReactNode } from "react";
 
 interface IFProps {
@@ -19,11 +20,13 @@ export const queryClient = new QueryClient({
 
 export const Providers = ({ children }: IFProps) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <HeroUIProvider>
-        <ToastProvider />
-        {children}
-      </HeroUIProvider>
-    </QueryClientProvider>
+    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
+      <QueryClientProvider client={queryClient}>
+        <HeroUIProvider>
+          <ToastProvider />
+          {children}
+        </HeroUIProvider>
+      </QueryClientProvider>
+    </APIProvider>
   );
 };

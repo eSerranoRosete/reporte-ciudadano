@@ -1,4 +1,4 @@
-import { APIProvider, Map, Marker } from "@vis.gl/react-google-maps";
+import { Map, Marker } from "@vis.gl/react-google-maps";
 import { useGeolocated } from "react-geolocated";
 
 interface IFProps {
@@ -16,20 +16,18 @@ export const MapComponent = ({ pinCoords, setPinCoords }: IFProps) => {
   if (!coords) return;
 
   return (
-    <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
-      <Map
-        className="w-full h-full"
-        defaultZoom={15}
-        onClick={(e) => {
-          const { latLng } = e.detail;
-          setPinCoords(latLng);
-        }}
-        gestureHandling="greedy"
-        disableDefaultUI
-        defaultCenter={{ lat: coords.latitude, lng: coords.longitude }}
-      >
-        {pinCoords && <Marker position={pinCoords} />}
-      </Map>
-    </APIProvider>
+    <Map
+      className="w-full h-full"
+      defaultZoom={15}
+      onClick={(e) => {
+        const { latLng } = e.detail;
+        setPinCoords(latLng);
+      }}
+      gestureHandling="greedy"
+      disableDefaultUI
+      defaultCenter={{ lat: coords.latitude, lng: coords.longitude }}
+    >
+      {pinCoords && <Marker position={pinCoords} />}
+    </Map>
   );
 };

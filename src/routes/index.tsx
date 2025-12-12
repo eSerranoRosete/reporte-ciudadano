@@ -6,10 +6,7 @@ import {
 } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ElementType } from "react";
-import type { Credentials } from "../hooks/useCredentials";
 import { useTipoReporte } from "../hooks/useTipoReporte";
-import { apiRequest } from "../lib/api";
-import { queryClient } from "../providers";
 
 interface IFContent {
   Icon: ElementType;
@@ -32,31 +29,6 @@ const icons: { [id: string]: IFContent } = {
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
-  beforeLoad: async () => {
-    const credentials = (await queryClient.getQueryData([
-      "auth",
-    ])) as Credentials;
-
-    await queryClient.fetchQuery({
-      queryKey: ["tipo-reporte"],
-      queryFn: async () => {
-        const res = await apiRequest(
-          "/Agua/Tipo_Reporte_Ciudadano_Agua_Devuelve",
-          {
-            apI_Key: credentials.apI_Key,
-            idUser: credentials.idUser,
-            sessionId: credentials.sessionId,
-          },
-          credentials.token,
-          "auth",
-        );
-
-        if (!res.ok) throw new Error("Auth Failed");
-
-        return await res.json();
-      },
-    });
-  },
 });
 
 function RouteComponent() {
@@ -66,14 +38,14 @@ function RouteComponent() {
     <>
       <div className="grid grid-cols-2 gap-4 gap-y-10">
         {tipoReporteQuery.data?.map((item: any) => {
-          const data = icons[item.id_Objeto];
+          const data = icons[item.id_Tipo_Reporte_Ciudadano_Agua];
           const Icon = data.Icon;
 
           return (
             <Link
-              key={item.id_Objeto}
+              key={item.id_Tipo_Reporte_Ciudadano_Agua}
               to="/reporte/$id"
-              params={{ id: item.id_Objeto }}
+              params={{ id: item.id_Tipo_Reporte_Ciudadano_Agua }}
               className="flex flex-col items-center gap-2"
             >
               <div className="w-2/3 bg-[#813349] aspect-square rounded-full flex items-center justify-center text-white">
